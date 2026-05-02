@@ -1,58 +1,96 @@
-# AI ChatBot
+# Resume Chatbot - Full Stack AI Application
 
-A Retrieval-Augmented Generation (RAG) chatbot that answers questions based on PDF documents using ChromaDB for vector storage and Google Gemini for response generation.
+A beginner-friendly full-stack chatbot that lets you chat with resume PDFs using AI. Built with **FastAPI** (backend), **React + TypeScript + Material UI** (frontend), and **Google Gemini** for intelligent responses.
 
 ## Features
 
-- PDF document loading and chunking
-- Vector embeddings using Sentence Transformers (all-MiniLM-L6-v2)
-- Vector storage with ChromaDB
-- Semantic search for relevant document chunks
-- LLM-powered answers using Google Gemini
-
-## Setup
-
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-2. Set up environment variables:
-```bash
-cp .env.example .env
-# Edit .env and add your Google API key
-```
-
-3. Add PDF files to the `data/` directory
-
-4. Run the application:
-```bash
-python app.py
-```
+- **Modern Web UI**: Clean chat interface built with React and Material UI
+- **PDF Processing**: Automatically loads and processes resume PDFs
+- **AI-Powered Chat**: Ask questions about the resume and get contextual answers
+- **Conversation Memory**: The bot remembers your previous questions
+- **RAG Architecture**: Uses Retrieval-Augmented Generation for accurate responses
 
 ## Project Structure
 
 ```
-├── app.py              # Main entry point
-├── src/
-│   ├── data_loader.py  # PDF loading
-│   ├── embedding.py    # Text chunking and embeddings
-│   ├── vectorstore.py  # ChromaDB vector storage
-│   └── search.py       # RAG search and LLM integration
-├── data/               # PDF documents
-├── requirements.txt    # Dependencies
-└── .env.example        # Environment template
+├── backend/                 # FastAPI Backend
+│   ├── main.py             # API entry point with /chat endpoint
+│   ├── src/
+│   │   ├── search_service.py   # RAG logic and LLM integration
+│   │   ├── vectorstore.py    # ChromaDB vector storage
+│   │   ├── embedding.py      # Text chunking & embeddings
+│   │   └── data_loader.py    # PDF loading
+│   ├── data/               # Put your resume PDFs here
+│   └── requirements.txt    # Python dependencies
+│
+├── frontend/               # React + TypeScript Frontend
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── ChatUI.tsx    # Main chat interface
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   └── package.json        # Node dependencies
+│
+├── data/                   # Legacy data folder (or use backend/data/)
+└── README.md
 ```
 
-## How It Works
+## Quick Start
 
-1. **Document Loading**: PDFs are loaded from `data/` directory
-2. **Chunking**: Documents are split into chunks (1000 chars, 200 overlap)
-3. **Embedding**: Each chunk is converted to a vector embedding
-4. **Storage**: Vectors are stored in ChromaDB
-5. **Query**: User query is embedded and matched to relevant chunks
-6. **Generation**: Top chunks are sent to Gemini for answer generation
+### 1. Setup Environment
+
+Create a `.env` file in the `backend/` folder:
+
+```bash
+cd backend
+cp .env.example .env
+# Edit .env and add your Google API Key
+```
+
+### 2. Start the Backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+The API will be available at `http://localhost:8000`
+
+### 3. Start the Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The web app will open at `http://localhost:5173`
+
+## How It Works (Simple Explanation)
+
+1. **PDF Loading**: Your resume PDF is loaded and split into text chunks
+2. **Embeddings**: Each chunk is converted to a "vector" (a list of numbers that represents the meaning)
+3. **Vector Store**: These vectors are stored in ChromaDB for fast searching
+4. **User Question**: When you ask a question, it's also converted to a vector
+5. **Similarity Search**: The system finds the most similar chunks from the resume
+6. **AI Response**: Google Gemini uses those chunks to answer your question
+
+## Learning Resources
+
+This project demonstrates:
+
+- **Backend**: FastAPI, REST APIs, environment variables
+- **Frontend**: React hooks (useState, useEffect), Material UI components
+- **AI/ML**: RAG pattern, vector embeddings, LLM integration
+- **Full Stack**: Connecting frontend to backend with HTTP requests
+
+## Customization
+
+- **Change the PDF**: Replace `backend/data/Resume.pdf` with your own resume
+- **Change the model**: Edit `llm_model` in `backend/src/search_service.py`
+- **Change the UI**: Edit `frontend/src/components/ChatUI.tsx`
 
 ## License
 
-MIT
+MIT - Free for learning and building!

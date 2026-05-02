@@ -3,7 +3,7 @@ import chromadb
 import numpy as np
 from typing import List, Any
 from sentence_transformers import SentenceTransformer
-from src.embedding import EmbeddingPipeline
+from .embedding import EmbeddingPipeline
 
 
 class ChromaVectorStore:
@@ -86,3 +86,15 @@ class ChromaVectorStore:
         print(f"[INFO] Querying vector store for: '{query_text}'")
         query_emb = self.model.encode([query_text]).astype("float32")
         return self.search(query_emb, top_k=top_k)
+
+    def clear_collection(self):
+        """Delete all documents from the collection"""
+        count = self.collection.count()
+        if count > 0:
+            all_ids = [str(i) for i in range(count)]
+            self.collection.delete(ids=all_ids)
+            print(f"[INFO] Cleared {count} documents from collection")
+        # Recreate empty collection
+        self.client.delete_collection(name="documents")
+        self.collection = self.client.create_collection(name="documents")
+        print("[INFO] Created fresh empty collection")
